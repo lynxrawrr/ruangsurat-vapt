@@ -1,7 +1,5 @@
 # RuangSurat - Lab Pengantar Keamanan Informasi
 
-* [ ] 
-
 Lab menyediakan dua profil aplikasi dari source yang sama: `vulnerable` sebagai baseline dengan kelemahan yang disengaja, dan `fixed` sebagai kandidat perbaikan. Seluruh akun, dokumen, dan lampiran awal menggunakan data fiktif.
 
 ## Tujuan dan pendekatan lab
@@ -69,7 +67,7 @@ Tabel tersebut merupakan acuan untuk membandingkan perilaku aplikasi dengan kebi
 
 Docker memisahkan database, sesi, dan storage lampiran kedua profil. Container berjalan sebagai `www-data`, memakai root filesystem read-only, membatasi capability, dan hanya memublikasikan port pada loopback host.
 
-## Menjalankan lab dengan Docker
+## Menjalankan lab dengan Docke
 
 Prasyarat: Docker Engine/Docker Desktop dengan Docker Compose, browser, serta port host 8080, 8081, dan 8090 yang tersedia. Jalankan perintah dari direktori root project. Build pertama memerlukan akses untuk mengunduh base image.
 
