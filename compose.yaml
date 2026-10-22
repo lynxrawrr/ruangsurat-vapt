@@ -1,0 +1,56 @@
+name: ruangsurat-lab
+x-app: &app
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop: [ALL]
+  tmpfs:
+    - /tmp
+    - /var/run/apache2:uid=33,gid=33,mode=0755
+    - /var/lock/apache2:uid=33,gid=33,mode=0755
+  healthcheck:
+    test: [CMD, php, -r, "exit(@file_get_contents('http://127.0.0.1:8080/health') === false ? 1 : 0);"]
+    interval: 10s
+    timeout: 3s
+    retries: 5
+    start_period: 10s
+services:
+  vulnerable:
+    <<: *app
+    image: ruangsurat-lab-vulnerable:1.1
+    profiles: [vulnerable]
+    environment:
+      APP_MODE: vulnerable
+      APP_BUILD: ruangsurat-1.1
+    ports: ['127.0.0.1:8080:8080']
+    volumes:
+      - vulnerable-data:/var/lib/ruangsurat
+      - vulnerable-uploads:/var/www/html/public/uploads
+  fixed:
+    <<: *app
+    image: ruangsurat-lab-fixed:1.1
+    profiles: [fixed]
+    environment:
+      APP_MODE: fixed
+      APP_BUILD: ruangsurat-1.1
+    ports: ['127.0.0.1:8081:8080']
+    volumes:
+      - fixed-data:/var/lib/ruangsurat
+  poc:
+    image: ruangsurat-lab-poc:1.1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    profiles: [poc]
+    entrypoint: [php, -S, '0.0.0.0:8090', -t, /opt/poc]
+    ports: ['127.0.0.1:8090:8090']
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+volumes:
+  vulnerable-data:
+  vulnerable-uploads:
+  fixed-data:
